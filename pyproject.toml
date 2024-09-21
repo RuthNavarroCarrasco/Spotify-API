@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "Spotify-API"
+version = "0.1.0"
+description = "Project that uses the Spotify API"
+authors = ["Ruth <100451032@alumnos.uc3m.es>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^2.0.3"
+requests = "^2.31.0"
+python-dotenv = "^1.0.0"
+pyarrow = "^17.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
