@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>{% block title %}{% endblock %}</title>
+    <meta content="" name="description">
+    <meta content="" name="keywords">
+
+    <!--Favicons-->
+    <link href="{{ url_for('static', filename='images/favicon.png') }}" rel="icon">
+    <link href="{{ url_for('static', filename='images/apple-touch-icon.png') }}" rel="apple-touch-icon">
+
+    <!--Google Fonts-->
+    <link href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <!-- Vendor CSS Files -->
+    <link href="{{ url_for('static', filename='css/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/vendor/bootstrap-icons/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/vendor/boxicons/css/boxicons.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/vendor/quill/quill.snow.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/vendor/quill/quill.bubble.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/vendor/simple-datatables/style.css') }}" rel="stylesheet">
+
+    <!-- Template Main CSS File -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link href="{{ url_for('static', filename='css/spotify-theme.css') }}" rel="stylesheet">
+
+        <!-- Custom CSS -->
+        <style>
+            /* General Body Styling */
+            body {
+                background: linear-gradient(180deg, #0E1A38 10%, #121212 90%);
+                color: white;
+                font-family: 'Poppins', sans-serif;
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+    
+            /* Main container styling */
+            .container {
+                max-width: 600px;
+                background-color: #191414;
+                padding: 2rem;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            }
+    
+            /* Title and Subtitle Styling */
+            .container h1 {
+                font-size: 2.5rem;
+                margin-bottom: 1rem;
+                color: #1DB954;
+            }
+    
+            .container p {
+                font-size: 1.2rem;
+                color: #A0A0A0;
+                margin-bottom: 2rem;
+            }
+    
+            /* Button Styling */
+            .btn-wrapped {
+                background-color: #1DB954;
+                border: none;
+                padding: 1.2rem 2.5rem;
+                font-size: 1rem;
+                color: black;
+                border-radius: 30px;
+                transition: background-color 0.3s ease;
+            }
+    
+            .btn-wrapped:hover {
+                background-color: #1ED760;
+                color: white;
+            }
+    
+            /* Footer links */
+            .footer-links {
+                margin-top: 3rem;
+                font-size: 0.9rem;
+            }
+    
+            .footer-links a {
+                color: #A0A0A0;
+                text-decoration: none;
+                margin: 0 0.5rem;
+            }
+    
+            .footer-links a:hover {
+                color: #1DB954;
+            }
+        </style>
+
+</head>
+<body>
+    {% block body %}
+    
+    {% endblock %}
+    <!-- Vendor JS Files -->
+    <script src="{{ url_for('static', filename='js/vendor/apexcharts/apexcharts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/chart.js/chart.umd.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/echarts/echarts.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/quill/quill.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/simple-datatables/simple-datatables.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/tinymce/tinymce.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vendor/php-email-form/validate.js') }}"></script>
+
+    <!-- Template Main JS File -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/layout.js') }}"></script>
+
+</body>
+</html>
