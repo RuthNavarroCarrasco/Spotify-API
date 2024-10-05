@@ -41,6 +41,16 @@
   </div>
 </div>
 
+<!-- Lista de géneros -->
+<div class="title-container mt-5">
+  <h1>Top 10 Géneros más escuchados</h1>
+</div>
+<div class="d-flex justify-content-center">
+  <div id="top-genres-badges" class="d-flex flex-wrap justify-content-center">
+    <!-- Los géneros más escuchados serán insertados aquí dinámicamente -->
+  </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Fetch top artists
@@ -59,6 +69,18 @@ document.addEventListener('DOMContentLoaded', function() {
       document.getElementById('items-tracks').innerHTML = data.items;
     });
 });
+// Fetch top genres
+fetch('/top-genres')
+  .then(response => response.json())
+  .then(data => {
+    let genresBadges = document.getElementById('top-genres-badges');
+    data.forEach(function(genre) {
+      const span = document.createElement('span');
+      span.classList.add('badge', 'bg-primary', 'm-1', 'p-3');
+      span.textContent = `${genre[0]} `;
+      genresBadges.appendChild(span);
+    });
+  });
 </script>
 
 {% endblock %}

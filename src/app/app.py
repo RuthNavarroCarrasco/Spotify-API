@@ -200,6 +200,35 @@ def get_top_artists():
         'items': carousel_items
     })
 
+@app.route('/top-genres')
+def get_top_genres():
+    if 'access_token' not in session:
+        return redirect('/login')
+
+    headers = {
+        'Authorization': f"Bearer {session['access_token']}",
+    }
+
+    params = {
+        'limit': 50,  # Obtener más artistas para generar géneros variados
+        'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
+    }
+
+    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params)
+    top_artists = top_artists_response.json()
+
+    genres_counter = {}
+
+    for artist in top_artists['items']:
+        for genre in artist['genres']:
+            if genre in genres_counter:
+                genres_counter[genre] += 1
+            else:
+                genres_counter[genre] = 1
+
+    top_genres = sorted(genres_counter.items(), key=lambda x: x[1], reverse=True)[:3]  # Obtener los 10 géneros más escuchados
+
+    return jsonify(top_genres)
 
 @app.route('/refresh-token')
 def refresh_token():
