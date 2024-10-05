@@ -127,9 +127,9 @@ def get_top_artists():
     # Generar contenido del carrusel
     carousel_indicators = ''
     carousel_items = ''
-    
+
     for idx, artist in enumerate(top_artists['items']):
-        # Asignar clase 'active' al primer elemento
+        # Asignar clase 'active' solo al primer elemento 
         active_class = 'active' if idx == 0 else ''
         
         # Crear indicador de carrusel
@@ -140,13 +140,15 @@ def get_top_artists():
         # Crear elemento de carrusel
         carousel_items += f'''
         <div class="carousel-item {active_class}">
-            <img src="{artist['images'][0]['url']}" class="d-block w-100" alt="{artist['name']}">
+            <div class="img-container">
+                <img src="{artist['images'][0]['url']}" class="d-block" alt="{artist['name']}">
+            </div>
             <div class="carousel-caption d-none d-md-block">
                 <h5>{idx + 1}. {artist['name']}</h5>
+                <p>Some representative placeholder content for the first slide.</p>
             </div>
         </div>
         '''
-
     return render_template('wrapped.html', indicators=carousel_indicators, items=carousel_items)
 
 
