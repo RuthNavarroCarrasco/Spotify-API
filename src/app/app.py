@@ -42,6 +42,10 @@ def login():
 
     return redirect(auth_url)
 
+@app.route('/wrapped')
+def wrapped():
+    return render_template('wrapped.html')
+
 @app.route('/callback')
 def callback():
     print('I got here')
@@ -68,7 +72,7 @@ def callback():
         session['refresh_token'] = token_info['refresh_token'] # refresh access token when it expires
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in'] # num of seconds the access token lasts
 
-        return redirect('/top-artists')
+        return redirect('/wrapped')
     
 @app.route('/playlists')
 def get_playlists():
@@ -104,76 +108,37 @@ def get_playlists():
 
     return table
 
-@app.route('/top-artists')
-def get_top_artists():
+@app.route('/top-tracks')
+def get_top_tracks():
     if 'access_token' not in session:
         return redirect('/login')
 
     if 'access_token' in session and datetime.now().timestamp() > session['expires_at']:
         return redirect('/refresh-token')
 
-    headers_top_artists = {
+    headers = {
         'Authorization': f"Bearer {session['access_token']}",
     }
 
-    params_top_artists = {
-        'limit': 10,  # Número de artistas que deseas obtener
+    params = {
+        'limit': 10,  # Número de canciones que deseas obtener
         'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
     }
 
-    headers_top_tracks = {
-        'Authorization': f"Bearer {session['access_token']}",
-    }
-
-    params_top_tracks = {
-        'limit': 10,  # Número de artistas que deseas obtener
-        'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
-    }
-
-    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers_top_artists, params=params_top_artists)
-    top_artists = top_artists_response.json()
-    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers_top_tracks, params=params_top_tracks)
+    # Obtener las canciones más escuchadas
+    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers, params=params)
     top_tracks = top_tracks_response.json()
 
-    # Generar contenido del carrusel para top artistas
-    carousel_indicators_top_artists = ''
-    carousel_items_top_artists = ''
-
-    for idx, artist in enumerate(top_artists['items']):
-        # Asignar clase 'active' solo al primer elemento 
-        active_class = 'active' if idx == 0 else ''
-        
-        # Crear indicador de carrusel
-        carousel_indicators_top_artists += f'''
-        <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
-        '''
-
-        # Crear elemento de carrusel
-        carousel_items_top_artists += f'''
-        <div class="carousel-item {active_class}">
-            <div class="img-container">
-                <img src="{artist['images'][0]['url']}" class="d-block" alt="{artist['name']}">
-            </div>
-            <div class="carousel-caption d-none d-md-block">
-                <h5>{idx + 1}. {artist['name']}</h5>
-            </div>
-        </div>
-        '''
-
-        # Generar contenido del carrusel para top tracks
-    carousel_indicators_top_tracks = ''
-    carousel_items_top_tracks = ''
+    # Generar contenido del carrusel para top canciones
+    carousel_indicators = ''
+    carousel_items = ''
 
     for idx, track in enumerate(top_tracks['items']):
         active_class = 'active' if idx == 0 else ''
-        
-        # Crear indicador de carrusel
-        carousel_indicators_top_tracks += f'''
+        carousel_indicators += f'''
         <button type="button" data-bs-target="#carouselTracks" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
         '''
-
-        # Crear elemento de carrusel
-        carousel_items_top_tracks += f'''
+        carousel_items += f'''
         <div class="carousel-item {active_class}">
             <div class="img-container">
                 <img src="{track['album']['images'][0]['url']}" class="d-block" alt="{track['name']}">
@@ -184,14 +149,56 @@ def get_top_artists():
         </div>
         '''
 
-    return render_template(
-        'wrapped.html', 
-        indicators_top_artists=carousel_indicators_top_artists, 
-        items_top_artists=carousel_items_top_artists,
-        indicators_top_tracks=carousel_indicators_top_tracks,
-        items_top_tracks=carousel_items_top_tracks
-    )
+    return jsonify({
+        'indicators': carousel_indicators,
+        'items': carousel_items
+    })
 
+@app.route('/top-artists')
+def get_top_artists():
+    if 'access_token' not in session:
+        return redirect('/login')
+
+    if 'access_token' in session and datetime.now().timestamp() > session['expires_at']:
+        return redirect('/refresh-token')
+
+    headers = {
+        'Authorization': f"Bearer {session['access_token']}",
+    }
+
+    params = {
+        'limit': 10,  # Número de artistas que deseas obtener
+        'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
+    }
+
+    # Obtener los artistas más escuchados
+    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params)
+    top_artists = top_artists_response.json()
+
+    # Generar contenido del carrusel para top artistas
+    carousel_indicators = ''
+    carousel_items = ''
+
+    for idx, artist in enumerate(top_artists['items']):
+        active_class = 'active' if idx == 0 else ''
+        carousel_indicators += f'''
+        <button type="button" data-bs-target="#carouselArtists" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
+        '''
+        carousel_items += f'''
+        <div class="carousel-item {active_class}">
+            <div class="img-container">
+                <img src="{artist['images'][0]['url']}" class="d-block" alt="{artist['name']}">
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+                <h5>{idx + 1}. {artist['name']}</h5>
+            </div>
+        </div>
+        '''
+
+    return jsonify({
+        'indicators': carousel_indicators,
+        'items': carousel_items
+    })
 
 
 @app.route('/refresh-token')

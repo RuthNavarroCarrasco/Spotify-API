@@ -9,12 +9,8 @@
 </div>
 <div class="d-flex justify-content-center">
   <div id="carouselArtists" class="carousel slide carousel-fade w-50" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      {{ indicators_top_artists|safe }}
-    </div>
-    <div class="carousel-inner">
-      {{ items_top_artists|safe }} 
-    </div>
+    <div class="carousel-indicators" id="indicators-artists"></div>
+    <div class="carousel-inner" id="items-artists"></div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselArtists" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
@@ -32,12 +28,8 @@
 </div>
 <div class="d-flex justify-content-center">
   <div id="carouselTracks" class="carousel slide carousel-fade w-50" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-      {{ indicators_top_tracks|safe }}
-    </div>
-    <div class="carousel-inner">
-      {{ items_top_tracks|safe }} 
-    </div>
+    <div class="carousel-indicators" id="indicators-tracks"></div>
+    <div class="carousel-inner" id="items-tracks"></div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselTracks" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
@@ -48,5 +40,25 @@
     </button>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Fetch top artists
+  fetch('/top-artists')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('indicators-artists').innerHTML = data.indicators;
+      document.getElementById('items-artists').innerHTML = data.items;
+    });
+
+  // Fetch top tracks
+  fetch('/top-tracks')
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('indicators-tracks').innerHTML = data.indicators;
+      document.getElementById('items-tracks').innerHTML = data.items;
+    });
+});
+</script>
 
 {% endblock %}
