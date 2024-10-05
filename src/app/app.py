@@ -112,44 +112,86 @@ def get_top_artists():
     if 'access_token' in session and datetime.now().timestamp() > session['expires_at']:
         return redirect('/refresh-token')
 
-    headers = {
+    headers_top_artists = {
         'Authorization': f"Bearer {session['access_token']}",
     }
 
-    params = {
+    params_top_artists = {
         'limit': 10,  # Número de artistas que deseas obtener
         'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
     }
 
-    response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params)
-    top_artists = response.json()
+    headers_top_tracks = {
+        'Authorization': f"Bearer {session['access_token']}",
+    }
 
-    # Generar contenido del carrusel
-    carousel_indicators = ''
-    carousel_items = ''
+    params_top_tracks = {
+        'limit': 10,  # Número de artistas que deseas obtener
+        'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
+    }
+
+    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers_top_artists, params=params_top_artists)
+    top_artists = top_artists_response.json()
+    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers_top_tracks, params=params_top_tracks)
+    top_tracks = top_tracks_response.json()
+
+    # Generar contenido del carrusel para top artistas
+    carousel_indicators_top_artists = ''
+    carousel_items_top_artists = ''
 
     for idx, artist in enumerate(top_artists['items']):
         # Asignar clase 'active' solo al primer elemento 
         active_class = 'active' if idx == 0 else ''
         
         # Crear indicador de carrusel
-        carousel_indicators += f'''
+        carousel_indicators_top_artists += f'''
         <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
         '''
 
         # Crear elemento de carrusel
-        carousel_items += f'''
+        carousel_items_top_artists += f'''
         <div class="carousel-item {active_class}">
             <div class="img-container">
                 <img src="{artist['images'][0]['url']}" class="d-block" alt="{artist['name']}">
             </div>
             <div class="carousel-caption d-none d-md-block">
                 <h5>{idx + 1}. {artist['name']}</h5>
-                <p>Some representative placeholder content for the first slide.</p>
             </div>
         </div>
         '''
-    return render_template('wrapped.html', indicators=carousel_indicators, items=carousel_items)
+
+        # Generar contenido del carrusel para top tracks
+    carousel_indicators_top_tracks = ''
+    carousel_items_top_tracks = ''
+
+    for idx, track in enumerate(top_tracks['items']):
+        active_class = 'active' if idx == 0 else ''
+        
+        # Crear indicador de carrusel
+        carousel_indicators_top_tracks += f'''
+        <button type="button" data-bs-target="#carouselTracks" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
+        '''
+
+        # Crear elemento de carrusel
+        carousel_items_top_tracks += f'''
+        <div class="carousel-item {active_class}">
+            <div class="img-container">
+                <img src="{track['album']['images'][0]['url']}" class="d-block" alt="{track['name']}">
+            </div>
+            <div class="carousel-caption d-none d-md-block">
+                <h5>{idx + 1}. {track['name']} - {track['artists'][0]['name']}</h5>
+            </div>
+        </div>
+        '''
+
+    return render_template(
+        'wrapped.html', 
+        indicators_top_artists=carousel_indicators_top_artists, 
+        items_top_artists=carousel_items_top_artists,
+        indicators_top_tracks=carousel_indicators_top_tracks,
+        items_top_tracks=carousel_items_top_tracks
+    )
+
 
 
 @app.route('/refresh-token')

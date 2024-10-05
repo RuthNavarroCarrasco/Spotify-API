@@ -3,19 +3,46 @@
 {% block title %}Wrapped{% endblock %}
 
 {% block body %}
+<!-- Carrusel para los Top Artistas -->
+<div class="title-container">
+  <h1>Top 10 Artistas más escuchados</h1>
+</div>
 <div class="d-flex justify-content-center">
-  <div id="carouselExampleCaptions" class="carousel slide carousel-fade w-50" data-bs-ride="carousel">
+  <div id="carouselArtists" class="carousel slide carousel-fade w-50" data-bs-ride="carousel">
     <div class="carousel-indicators">
-      {{ indicators|safe }}
+      {{ indicators_top_artists|safe }}
     </div>
     <div class="carousel-inner">
-      {{ items|safe }} 
+      {{ items_top_artists|safe }} 
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselArtists" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselArtists" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+
+<!-- Carrusel para los Top Tracks -->
+<div class="title-container">
+  <h1>Top 10 Canciones más escuchadas</h1>
+</div>
+<div class="d-flex justify-content-center">
+  <div id="carouselTracks" class="carousel slide carousel-fade w-50" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      {{ indicators_top_tracks|safe }}
+    </div>
+    <div class="carousel-inner">
+      {{ items_top_tracks|safe }} 
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselTracks" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselTracks" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
