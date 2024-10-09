@@ -1,5 +1,6 @@
 import requests
 import os
+from sql_connection import create_connection, insert
 import urllib.parse
 from datetime import datetime
 from flask import Flask, redirect, request, jsonify, session, render_template
@@ -128,6 +129,32 @@ def get_top_tracks():
     # Obtener las canciones más escuchadas
     top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers, params=params)
     top_tracks = top_tracks_response.json()
+
+    # Conexión a la base de datos
+    engine = create_connection() 
+
+    print("\n\n", engine)
+
+    # Insertar artistas en la base de datos
+    for track in top_tracks['items']:
+        artist = track['artists'][0]
+        spotify_artist_id = artist['id']
+        name = artist['name']
+        popularity = artist.get('popularity', None)
+        image_url = artist['external_urls']['spotify']
+        uri = artist['uri']
+
+        # Consulta para verificar si el artista ya existe en la base de datos para evitar duplicados
+        verification_query = f"SELECT id FROM artists WHERE spotify_artist_id = '{spotify_artist_id}'"
+
+        # Consulta para insertar el artista si no existe
+        insert_query = f"""
+            INSERT INTO artists (spotify_artist_id, name, popularity, image_url, uri)
+            VALUES ('{spotify_artist_id}', '{name}', {popularity}, '{image_url}', '{uri}')
+        """
+
+        # Llamada a la función insert con las queries correspondientes
+        insert(engine, insert_query, verification_query)
 
     # Generar contenido del carrusel para top canciones
     carousel_indicators = ''

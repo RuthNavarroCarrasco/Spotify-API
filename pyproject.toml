@@ -13,6 +13,12 @@ requests = "^2.31.0"
 python-dotenv = "^1.0.0"
 pyarrow = "^17.0.0"
 flask = "^3.0.3"
+pyodbc = "^5.1.0"
+sqlalchemy = "^2.0.35"
+fastapi = "^0.115.0"
+uvicorn = "^0.31.0"
+pydantic = "^2.9.2"
+azure-identity = "^1.19.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
