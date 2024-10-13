@@ -1,0 +1,260 @@
+{% extends './layout.html' %}
+
+{% block title %}Wrapped{% endblock %}
+
+{% block body %}
+<div id="immersive-container">
+    <!-- Sección de Bienvenida -->
+    <section id="welcome-section" class="immersive-section">
+        <div class="content-center">
+            <h1>WELCOME TO YOUR TOP SPOTIFY STATISTICS</h1>
+        </div>
+    </section>
+
+    <!-- Introducción de los Top Artistas -->
+    <section id="introduction-section" class="immersive-section">
+        <div class="content-center">
+            <h2>Discover Your Top Artists</h2>
+            <p>Here, you will see a list of your most listened artists based on your Spotify data. Enjoy the visual experience and explore their individual statistics as you scroll down.</p>
+        </div>
+    </section>
+
+    <!-- Sección de cada Artista usando los datos de la API -->
+    {% for artist in artists %}
+    <section class="artist-section immersive-section" data-artist="{{ artist.name }}">
+        <div class="artist-media">
+            <img src="{{ artist.image }}" alt="{{ artist.name }}">
+        </div>
+        <div class="artist-stats">
+            <h2>TOP {{ artist.top_position }}</h2>
+            <h3>{{ artist.name }}</h3>
+            <p>Followers: {{ artist.followers }}</p>
+            <p>Popularity: {{ artist.popularity }}%</p>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+    <!-- Introducción de las Top Canciones -->
+    <section id="introduction-section" class="immersive-section">
+        <div class="content-center">
+            <h2>Discover Your Top Tracks</h2>
+            <p>Here, you will see a list of your most listened tracks based on your Spotify data. Enjoy the visual experience and explore their individual statistics as you scroll down.</p>
+        </div>
+    </section>
+
+    <!-- Sección de cada Canción usando los datos de la API -->
+    {% for track in tracks %}
+    <section class="artist-section immersive-section" data-track="{{ track.name }}">
+        <div class="artist-media">
+            <img src="{{ track.image }}" alt="{{ track.name }}">
+        </div>
+        <div class="artist-stats">
+            <h2>TOP {{ track.top_position }}</h2>
+            <h3>{{ track.name }}</h3>
+            <p>Artist: {{ track.artist }}</p>
+            <p>Album: {{ track.album }}</p>
+            <p>Popularity: {{ track.popularity }}%</p>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+<!-- Resumen de Top Artistas -->
+<section id="summary-section">
+    <div class="summary-content">
+        <h2>Your Top Artists Summary</h2>
+        <p>This section gives you an overview of your most played artists. Discover the names that have shaped your musical journey and find out their rankings based on your listening history.</p>
+    </div>
+</section>
+
+<!-- Añadir las tarjetas de artistas en columnas -->
+<div class="artist-cards-container">
+    {% for artist in artists %}
+    <div class="artist-card">
+        <img src="{{ artist.image }}" alt="{{ artist.name }}">
+        <h3>{{ artist.name }}</h3>
+        <p>TOP {{ artist.top_position }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Resumen de Top Canciones -->
+<section id="summary-section">
+    <div class="summary-content">
+        <h2>Your Top Tracks Summary</h2>
+        <p>This section gives you an overview of your most played tracks. Discover the songs that have shaped your musical journey and find out their rankings based on your listening history.</p>
+    </div>
+</section>
+
+<!-- Añadir las tarjetas de canciones en columnas -->
+<div class="artist-cards-container">
+    {% for track in tracks %}
+    <div class="artist-card">
+        <img src="{{ track.image }}" alt="{{ track.name }}">
+        <h3>{{ track.name }}</h3>
+        <p>Artist: {{ track.artist }}</p>
+        <p>TOP {{ track.top_position }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+
+
+<style>
+/* Estilos generales */
+#immersive-container {
+        position: relative;
+        width: 100%;
+        height: auto;
+    }
+
+    .immersive-section {
+        position: relative;
+        height: 100vh; /* Cada sección sigue ocupando toda la pantalla */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin-bottom: 50px; /* Añade un margen inferior para separar cada sección */
+    }
+
+    #introduction-section, #summary-section {
+        text-align: center;
+        padding: 60px 20px;
+        background-color: #f5f5f5;
+    }
+
+    .content-center h2, .summary-content h2 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .content-center p, .summary-content p {
+        font-size: 1.2rem;
+        color: #555;
+    }
+
+    .artist-media img {
+        width: 50vw;
+        height: auto;
+        object-fit: cover;
+        transition: transform 0.5s ease, width 0.5s ease;
+        position: relative;
+    }
+
+    .artist-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        position: relative;  /* Añade posición relativa */
+    }
+
+    .artist-media img {
+        width: 50vw;  
+        height: auto;
+        object-fit: cover;
+        transition: transform 0.5s ease, width 0.5s ease;
+        position: relative;
+    }
+
+    .artist-stats {
+        position: absolute;  /* Cambiamos a absolute para evitar movimiento */
+        right: 10%;  /* Ajusta la posición derecha */
+        top: 50%;  /* Centra verticalmente */
+        transform: translateY(-50%);  /* Ajusta para centrar */
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        display: none;  /* Oculto inicialmente */
+    }
+
+    .artist-section.visible .artist-stats {
+        opacity: 1;
+        display: block;  
+    }
+
+    .artist-section.small-view .artist-stats {
+        display: block;
+        opacity: 1;
+    }
+    /* Estilos de las tarjetas */
+    .artist-cards-container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        padding: 40px;
+    }
+
+    .artist-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        background-color: #f0f0f0;
+        border-radius: 10px;
+        padding: 20px;
+        width: 250px;
+    }
+
+    .artist-card img {
+        width: 100%;
+        border-radius: 10px;
+        object-fit: cover;
+        height: 300px;
+    }
+
+    .artist-card h3 {
+        margin-top: 20px;
+        font-size: 1.5em;
+        color: #333;
+    }
+
+    .artist-card p {
+        margin-top: 5px;
+        font-size: 1.2em;
+        color: #777;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const artistSections = document.querySelectorAll('.artist-section');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                } else {
+                    entry.target.classList.remove('visible');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        artistSections.forEach(section => {
+            observer.observe(section);
+        });
+
+        document.addEventListener('scroll', function () {
+            artistSections.forEach(section => {
+                const media = section.querySelector('.artist-media img');
+                const stats = section.querySelector('.artist-stats');
+                const rect = section.getBoundingClientRect();
+
+                // Efecto para escalar la imagen cuando la sección esté visible
+                if (rect.top >= 0 && rect.top <= window.innerHeight) {
+                    const progress = (window.innerHeight - rect.top) / window.innerHeight;
+                    if (progress <= 0.6) {
+                        media.style.transform = `scale(${1 + progress * 0.5})`;
+                    } else {
+                        section.classList.add('small-view'); // Se mantiene el tamaño pequeño y aparecen las estadísticas
+                    }
+                } else {
+                    section.classList.remove('small-view'); // Restablece el tamaño
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

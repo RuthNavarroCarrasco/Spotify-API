@@ -1,6 +1,5 @@
 import requests
 import os
-from sql_connection import create_connection, insert
 import urllib.parse
 from datetime import datetime
 from flask import Flask, redirect, request, jsonify, session, render_template
@@ -45,7 +44,8 @@ def login():
 
 @app.route('/wrapped')
 def wrapped():
-    return render_template('wrapped.html')
+    return render_template('artists.html')
+    # return render_template('wrapped.html')
 
 @app.route('/callback')
 def callback():
@@ -73,44 +73,10 @@ def callback():
         session['refresh_token'] = token_info['refresh_token'] # refresh access token when it expires
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in'] # num of seconds the access token lasts
 
-        return redirect('/wrapped')
-    
-@app.route('/playlists')
-def get_playlists():
-    print('I reached playlist')
-    if 'access_token' not in session:
-        print('I reached playlist access_token not in session')
-        redirect('/login')
-    if 'access_token' in session and datetime.now().timestamp() > session['expires_at']:
-        print('I reached playlist access_token has expired')
-        return redirect('/refresh-token')
-    
-    headers = {
-        'Authorization': f"Bearer {session['access_token']}",
-    }
-    print('We are getting the playlists')
-    response = requests.get(API_BASE_URL + 'me/playlists', headers=headers)
-    playlists = response.json()
+        return redirect('/top')
 
-    # Construir la tabla HTML
-    table = '<table border="1">'
-    table += '<tr><th>Playlist Name</th><th>Owner</th><th>Tracks</th><th>Link</th></tr>'
-
-    for playlist in playlists['items']:
-        table += '<tr>'
-        table += f"<td>{playlist['name']}</td>"
-        table += f"<td>{playlist['owner']['display_name']}</td>"
-        table += f"<td>{playlist['tracks']['total']}</td>"
-        table += f"<td><a href='{playlist['external_urls']['spotify']}'>Open in Spotify</a></td>"
-        table += '</tr>'
-
-    table += '</table>' 
-    # return jsonify(playlists)<
-
-    return table
-
-@app.route('/top-tracks')
-def get_top_tracks():
+@app.route('/top')
+def get_top_tracks_and_artists():
     if 'access_token' not in session:
         return redirect('/login')
 
@@ -121,111 +87,49 @@ def get_top_tracks():
         'Authorization': f"Bearer {session['access_token']}",
     }
 
-    params = {
-        'limit': 10,  # Número de canciones que deseas obtener
-        'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
+    # Obtener las top 5 canciones
+    params_tracks = {
+        'limit': 5,
+        'time_range': 'medium_term'
     }
-
-    # Obtener las canciones más escuchadas
-    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers, params=params)
+    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers, params=params_tracks)
     top_tracks = top_tracks_response.json()
 
-    # Conexión a la base de datos
-    engine = create_connection() 
-
-    print("\n\n", engine)
-
-    # Insertar artistas en la base de datos
-    for track in top_tracks['items']:
-        artist = track['artists'][0]
-        spotify_artist_id = artist['id']
-        name = artist['name']
-        popularity = artist.get('popularity', None)
-        image_url = artist['external_urls']['spotify']
-        uri = artist['uri']
-
-        # Consulta para verificar si el artista ya existe en la base de datos para evitar duplicados
-        verification_query = f"SELECT id FROM artists WHERE spotify_artist_id = '{spotify_artist_id}'"
-
-        # Consulta para insertar el artista si no existe
-        insert_query = f"""
-            INSERT INTO artists (spotify_artist_id, name, popularity, image_url, uri)
-            VALUES ('{spotify_artist_id}', '{name}', {popularity}, '{image_url}', '{uri}')
-        """
-
-        # Llamada a la función insert con las queries correspondientes
-        insert(engine, insert_query, verification_query)
-
-    # Generar contenido del carrusel para top canciones
-    carousel_indicators = ''
-    carousel_items = ''
-
+    tracks = []
     for idx, track in enumerate(top_tracks['items']):
-        active_class = 'active' if idx == 0 else ''
-        carousel_indicators += f'''
-        <button type="button" data-bs-target="#carouselTracks" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
-        '''
-        carousel_items += f'''
-        <div class="carousel-item {active_class}">
-            <div class="img-container">
-                <img src="{track['album']['images'][0]['url']}" class="d-block" alt="{track['name']}">
-            </div>
-            <div class="carousel-caption d-none d-md-block">
-                <h5>{idx + 1}. {track['name']} - {track['artists'][0]['name']}</h5>
-            </div>
-        </div>
-        '''
+        track_data = {
+            'top_position': idx + 1,
+            'name': track['name'],
+            'artist': ', '.join([artist['name'] for artist in track['artists']]),
+            'album': track['album']['name'],
+            'image': track['album']['images'][0]['url'],
+            'popularity': track['popularity']
+        }
+        tracks.append(track_data)
 
-    return jsonify({
-        'indicators': carousel_indicators,
-        'items': carousel_items
-    })
-
-@app.route('/top-artists')
-def get_top_artists():
-    if 'access_token' not in session:
-        return redirect('/login')
-
-    if 'access_token' in session and datetime.now().timestamp() > session['expires_at']:
-        return redirect('/refresh-token')
-
-    headers = {
-        'Authorization': f"Bearer {session['access_token']}",
+    # Obtener los top 5 artistas
+    params_artists = {
+        'limit': 5,
+        'time_range': 'medium_term'
     }
-
-    params = {
-        'limit': 10,  # Número de artistas que deseas obtener
-        'time_range': 'medium_term'  # Opciones: 'short_term', 'medium_term', 'long_term'
-    }
-
-    # Obtener los artistas más escuchados
-    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params)
+    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params_artists)
     top_artists = top_artists_response.json()
 
-    # Generar contenido del carrusel para top artistas
-    carousel_indicators = ''
-    carousel_items = ''
+    artists = [
+        {
+            'name': artist['name'],
+            'image': artist['images'][0]['url'],
+            'popularity': artist['popularity'],
+            'followers': artist['followers']['total'],
+            'top_position': idx + 1
+        }
+        for idx, artist in enumerate(top_artists['items'])
+    ]
 
-    for idx, artist in enumerate(top_artists['items']):
-        active_class = 'active' if idx == 0 else ''
-        carousel_indicators += f'''
-        <button type="button" data-bs-target="#carouselArtists" data-bs-slide-to="{idx}" class="{active_class}" aria-current="true" aria-label="Slide {idx + 1}"></button>
-        '''
-        carousel_items += f'''
-        <div class="carousel-item {active_class}">
-            <div class="img-container">
-                <img src="{artist['images'][0]['url']}" class="d-block" alt="{artist['name']}">
-            </div>
-            <div class="carousel-caption d-none d-md-block">
-                <h5>{idx + 1}. {artist['name']}</h5>
-            </div>
-        </div>
-        '''
+    # Renderizar la página HTML con canciones y artistas
+    return render_template('top.html', tracks=tracks, artists=artists)
 
-    return jsonify({
-        'indicators': carousel_indicators,
-        'items': carousel_items
-    })
+
 
 @app.route('/top-genres')
 def get_top_genres():

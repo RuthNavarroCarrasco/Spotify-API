@@ -1,13 +1,64 @@
-/* Fondo general en degradado hacia negro */
 body {
-    background: linear-gradient(to bottom, #0E1A38 5%, #121212 95%); /* Degradado más fuerte hacia negro */
-    color: #FFFFFF; /* Texto blanco */
+    background: #222629;
+    color: #FFFFFF;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow-x: hidden;  /* Evitar el desbordamiento horizontal */
+}
+
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-image: url('/static/images/spotify.png'); /* Ruta de la imagen */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain; /* Cambia a 'contain' para que la imagen mantenga sus proporciones y no se corte */
+    width: 35%;  /* Ancho completo */
+    height: 35%; /* Alto completo */
+    opacity: 0.1; /* Reducir opacidad para que la imagen no opaque el texto */
+    z-index: 0; /* Enviar al fondo */
+}
+
+
+/* Estilo para el contenido que se muestra sobre la imagen */
+.text-center {
+    position: relative;
+    z-index: 1;
+    color: #FFFFFF;  /* Las letras deben destacarse en blanco */
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5); /* Añadir sombra al texto para mayor visibilidad */
 }
 
 /* Títulos siempre en blanco */
-h1, h2, h3, h4, h5, h6 {
-    color: #FFFFFF !important; /* Blanco para todos los títulos */
+h1, p {
+    z-index: 1;
+    position: relative;
+    color: #FFFFFF;  /* Letras claras */
 }
+
+/* Botones principales */
+.btn-primary {
+    background-color: #1DB954;
+    border-color: #1DB954;
+    color: #FFFFFF;
+    z-index: 1;
+}
+
+.btn-primary:hover {
+    background-color: #1ED760;
+    border-color: #1ED760;
+}
+
+/* Títulos siempre en blanco */
+
 
 /* Header */
 .header {
@@ -23,113 +74,63 @@ h1, h2, h3, h4, h5, h6 {
     color: #1DB954 !important; /* Hover en verde */
 }
 
-.header .search-bar input {
-    background-color: #323232; /* Fondo oscuro para barra de búsqueda */
-    color: #FFFFFF; /* Texto blanco en búsqueda */
-    border: none; /* Sin borde */
+.title-container h2 {
+    font-weight: bold;
+    font-size: 2.5rem; /* Ajusta el tamaño según necesites */
+    margin-bottom: 1.5rem; /* Aumenta el espacio bajo los títulos */
 }
 
-.header .search-bar input::placeholder {
-    color: #999999; /* Placeholder en gris claro */
+.carousel {
+    margin-top: 40px;
+    margin-bottom: 40px;
 }
 
-/* Iconos y badges en el header */
-.header .nav-link .badge {
-    background-color: #1DB954; /* Verde Spotify */
-    color: #FFFFFF; /* Texto blanco */
+/* Ocultamos inicialmente las secciones */
+.section {
+    min-height: 100vh; /* Cada sección ocupa el 100% del alto de la ventana */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  
+
+/* Añadimos la clase .visible para activar la animación */
+.section.visible {
+    opacity: 1;
+    transform: translateY(0); /* Vuelve a la posición original */
 }
 
-/* Sidebar */
-.sidebar {
-    background-color: #121212 !important; /* Fondo más oscuro */
-    color: #FFFFFF !important; /* Texto blanco */
+
+
+.carousel-container {
+    width: 50%; /* Reducimos el tamaño del carrusel al 50% del ancho de la pantalla */
+    margin: 0 auto; /* Centramos el carrusel horizontalmente */
+    padding: 20px 0; /* Espacio opcional alrededor del carrusel */
 }
 
-.sidebar .nav-link {
-    background-color: #121212 !important; /* Fondo por defecto */
-    color: #A0A0A0 !important; /* Enlaces en gris claro */
+.carousel-item img {
+    width: 100%; /* Las imágenes seguirán ocupando el ancho del carrusel */
+    height: auto; /* Mantén la proporción de las imágenes */
+    object-fit: cover; /* Asegura que las imágenes se ajusten bien al contenedor */
 }
 
-.sidebar .nav-link:hover {
-    background-color: #273042 !important; /* Fondo en hover */
-    color: #FFFFFF !important; /* Texto blanco en hover */
+.img-container {
+    position: relative;
+    width: 100%;
+    padding-bottom: 75%; /* Cambiamos el ratio de las imágenes a 4:3 para que sean más pequeñas */
+    overflow: hidden;
 }
 
-.sidebar .nav-link.active {
-    background-color: #1DB954 !important; /* Fondo verde para el enlace activo */
-    color: #FFFFFF !important; /* Texto blanco en el enlace activo */
+.img-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Las imágenes se ajustarán al contenedor sin perder proporciones */
 }
 
-/* Botones principales */
-.btn-primary {
-    background-color: #1DB954; /* Botones principales en verde */
-    border-color: #1DB954;
-    color: #FFFFFF;
-}
-
-.btn-primary:hover {
-    background-color: #1ED760; /* Botones en hover en verde más claro */
-    border-color: #1ED760;
-}
-
-/* Botones secundarios */
-.btn-secondary {
-    background-color: #535353; /* Botones secundarios en gris oscuro */
-    border-color: #535353;
-    color: #FFFFFF;
-}
-
-.btn-secondary:hover {
-    background-color: #FFFFFF; /* Hover blanco */
-    color: #000000 !important; /* Texto negro en hover */
-}
-
-/* Tarjetas */
-.card {
-    background-color: #323232; /* Fondo más claro para tarjetas */
-    border: 1px solid #1DB954; /* Bordes verdes */
-    color: #FFFFFF;
-}
-
-.card-title, .card-text {
-    color: #FFFFFF; /* Texto blanco dentro de las tarjetas */
-}
-
-.card a {
-    color: #1DB954; /* Enlaces dentro de tarjetas en verde */
-}
-
-.card a:hover {
-    color: #1ED760; /* Hover de enlaces en tarjetas */
-}
-
-/* Tablas */
-.table {
-    background-color: #323232; /* Tablas con fondo más claro */
-    color: #FFFFFF; /* Texto blanco en tablas */
-}
-
-.table th {
-    background-color: #111111; /* Encabezados de tabla en fondo más suave */
-    color: #1DB954; /* Texto verde en encabezados */
-}
-
-.table tbody tr:hover {
-    background-color: #FFFFFF !important; /* Hover en filas con fondo blanco */
-    color: #000000 !important; /* Texto negro en hover */
-}
-
-/* Inputs y formularios */
-.form-control {
-    background-color: #323232; /* Fondos claros para inputs */
-    color: #FFFFFF; /* Texto blanco en inputs */
-    border: 1px solid #535353; /* Bordes grises oscuros */
-}
-
-.form-control:focus {
-    border-color: #1DB954; /* Bordes verdes al enfocar */
-    box-shadow: 0 0 0 0.2rem rgba(29, 185, 84, 0.25);
-}
 
 /* Footer */
 .footer {
@@ -145,3 +146,5 @@ h1, h2, h3, h4, h5, h6 {
 .footer a:hover {
     color: #1ED760; /* Hover en enlaces del footer */
 }
+
+
