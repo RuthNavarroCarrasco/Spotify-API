@@ -1,3 +1,17 @@
+# How to run
+
+Create a `.env` file with the following content:
+```
+CLIENT_ID="foo"
+CLIENT_SECRET="bar"
+```
+
+```bash
+poetry install
+poetry shell
+python3 src/app/app.py
+``` 
+
 # Spotify-API
 
 - generos mas escuchados
