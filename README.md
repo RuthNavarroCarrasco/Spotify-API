@@ -1,3 +1,20 @@
+# How to run
+
+Create a `.env` file with the following content:
+```
+CLIENT_ID="foo"
+CLIENT_SECRET="bar"
+```
+Take the id and secret from your Spotify developer account.
+
+Add this as Redirect URIs: `http://localhost:5000/callback`
+
+```bash
+poetry install
+poetry shell
+python3 src/app/app.py
+``` 
+
 # Spotify-API
 
 - generos mas escuchados
