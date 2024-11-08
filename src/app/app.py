@@ -87,12 +87,11 @@ def get_top_tracks_and_artists():
         'Authorization': f"Bearer {session['access_token']}",
     }
 
-    # Obtener las top 5 canciones
-    params_tracks = {
+    params = {
         'limit': 5,
         'time_range': 'medium_term'
     }
-    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers, params=params_tracks)
+    top_tracks_response = requests.get(API_BASE_URL + 'me/top/tracks', headers=headers, params=params)
     top_tracks = top_tracks_response.json()
 
     tracks = []
@@ -107,12 +106,7 @@ def get_top_tracks_and_artists():
         }
         tracks.append(track_data)
 
-    # Obtener los top 5 artistas
-    params_artists = {
-        'limit': 5,
-        'time_range': 'medium_term'
-    }
-    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params_artists)
+    top_artists_response = requests.get(API_BASE_URL + 'me/top/artists', headers=headers, params=params)
     top_artists = top_artists_response.json()
 
     artists = [
