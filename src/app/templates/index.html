@@ -1,0 +1,16 @@
+{% extends './layout.html' %}
+
+{% block title %}Start{% endblock %}
+
+{% block body %}
+<div class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+  <div class="text-center">
+    <h1>Bienvenido a tu Spotify Wrapped Personalizado</h1>
+    <p>Descubre tus canciones, artistas y géneros más escuchados de este año.</p>
+    
+    <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg">Login to Spotify</a>
+
+   
+  </div>
+</div>
+{% endblock %}

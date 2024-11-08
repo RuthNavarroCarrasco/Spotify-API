@@ -1,0 +1,102 @@
+{% extends './layout.html' %}
+
+{% block title %}Wrapped{% endblock %}
+
+{% block body %}
+<div id="immersive-container">
+    <!-- Sección de Bienvenida -->
+    <section id="welcome-section" class="immersive-section">
+        <div class="content-center">
+            <h1>WELCOME TO YOUR TOP SPOTIFY STATISTICS</h1>
+        </div>
+    </section>
+
+    <!-- Introducción de los Top Artistas -->
+    <section id="introduction-section" class="immersive-section">
+        <div class="content-center">
+            <h2>Discover Your Top Artists</h2>
+            <p>Here, you will see a list of your most listened artists based on your Spotify data. Enjoy the visual experience and explore their individual statistics as you scroll down.</p>
+        </div>
+    </section>
+
+    <!-- Sección de cada Artista usando los datos de la API -->
+    {% for artist in artists %}
+    <section class="artist-section immersive-section" data-artist="{{ artist.name }}">
+        <div class="artist-media">
+            <img src="{{ artist.image }}" alt="{{ artist.name }}">
+        </div>
+        <div class="artist-stats">
+            <h2>TOP {{ artist.top_position }}</h2>
+            <h3>{{ artist.name }}</h3>
+            <p>Followers: {{ artist.followers }}</p>
+            <p>Popularity: {{ artist.popularity }}%</p>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+    <!-- Introducción de las Top Canciones -->
+    <section id="introduction-section" class="immersive-section">
+        <div class="content-center">
+            <h2>Discover Your Top Tracks</h2>
+            <p>Here, you will see a list of your most listened tracks based on your Spotify data. Enjoy the visual experience and explore their individual statistics as you scroll down.</p>
+        </div>
+    </section>
+
+    <!-- Sección de cada Canción usando los datos de la API -->
+    {% for track in tracks %}
+    <section class="artist-section immersive-section" data-track="{{ track.name }}">
+        <div class="artist-media">
+            <img src="{{ track.image }}" alt="{{ track.name }}">
+        </div>
+        <div class="artist-stats">
+            <h2>TOP {{ track.top_position }}</h2>
+            <h3>{{ track.name }}</h3>
+            <p>Artist: {{ track.artist }}</p>
+            <p>Album: {{ track.album }}</p>
+            <p>Popularity: {{ track.popularity }}%</p>
+        </div>
+    </section>
+    {% endfor %}
+</div>
+
+<!-- Resumen de Top Artistas -->
+<section id="summary-section">
+    <div class="summary-content">
+        <h2>Your Top Artists Summary</h2>
+        <p>This section gives you an overview of your most played artists. Discover the names that have shaped your musical journey and find out their rankings based on your listening history.</p>
+    </div>
+</section>
+
+<!-- Añadir las tarjetas de artistas en columnas -->
+<div class="artist-cards-container">
+    {% for artist in artists %}
+    <div class="artist-card">
+        <img src="{{ artist.image }}" alt="{{ artist.name }}">
+        <h3>{{ artist.name }}</h3>
+        <p>TOP {{ artist.top_position }}</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Resumen de Top Canciones -->
+<section id="summary-section">
+    <div class="summary-content">
+        <h2>Your Top Tracks Summary</h2>
+        <p>This section gives you an overview of your most played tracks. Discover the songs that have shaped your musical journey and find out their rankings based on your listening history.</p>
+    </div>
+</section>
+
+<!-- Añadir las tarjetas de canciones en columnas -->
+<div class="artist-cards-container">
+    {% for track in tracks %}
+    <div class="artist-card">
+        <img src="{{ track.image }}" alt="{{ track.name }}">
+        <h3>{{ track.name }}</h3>
+        <p>Artist: {{ track.artist }}</p>
+        <p>TOP {{ track.top_position }}</p>
+    </div>
+    {% endfor %}
+</div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}
