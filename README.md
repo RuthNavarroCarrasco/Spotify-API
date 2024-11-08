@@ -18,7 +18,6 @@ Esta aplicación permite a los usuarios iniciar sesión con su cuenta de Spotify
 ### 🔹 Características principales:
 - ✅ Autenticación a través de la cuenta de Spotify.
 - 🎤 Obtención de los top artistas y canciones del usuario.
-- 🎧 Visualización de los géneros más escuchados a través de la web.
 
 ## ⚙️ Requisitos
 
