@@ -22,8 +22,8 @@ Esta aplicación permite a los usuarios iniciar sesión con su cuenta de Spotify
 
 ## ⚙️ Requisitos
 
-1. **Cuenta en [Spotify for Developers](https://developer.spotify.com/)**: Necesitarás crear una aplicación para obtener el `CLIENT_ID` y `CLIENT_SECRET`.
-   
+1. **Cuenta en [Spotify for Developers](https://developer.spotify.com/)**: Necesitarás crear una aplicación para obtener el `CLIENT_ID` y `CLIENT_SECRET`. 
+
 2. **Spotify API Credentials**: Una vez que hayas creado la aplicación, obtén tus credenciales de:
    - `CLIENT_ID`
    - `CLIENT_SECRET`
