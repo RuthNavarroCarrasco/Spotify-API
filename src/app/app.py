@@ -23,7 +23,6 @@ API_BASE_URL = 'https://api.spotify.com/v1/'
 
 @app.route('/')
 def index():
-    # return "Welcome to my Spotify App <a href='/login'>Login with Spotify</a>"
     return render_template('index.html')
 
 @app.route('/login')
@@ -45,15 +44,10 @@ def login():
 @app.route('/wrapped')
 def wrapped():
     return render_template('artists.html')
-    # return render_template('wrapped.html')
 
 @app.route('/callback')
 def callback():
-    print('I got here')
     if 'error' in request.args:
-        error = jsonify({"error": request.args['error']})
-        print(f'I got here to the error {error}')
-
         return jsonify({"error": request.args['error']})
 
     if 'code' in request.args:
@@ -68,7 +62,6 @@ def callback():
 
         response = requests.post(TOKEN_URL, data=request_body)
         token_info = response.json()
-        print(f'I got here to the token {token_info}')
         session['access_token'] = token_info['access_token'] # make a req to spotidfy api
         session['refresh_token'] = token_info['refresh_token'] # refresh access token when it expires
         session['expires_at'] = datetime.now().timestamp() + token_info['expires_in'] # num of seconds the access token lasts
@@ -120,7 +113,6 @@ def get_top_tracks_and_artists():
         for idx, artist in enumerate(top_artists['items'])
     ]
 
-    # Renderizar la página HTML con canciones y artistas
     return render_template('top.html', tracks=tracks, artists=artists)
 
 
@@ -175,7 +167,6 @@ def refresh_token():
         session['access_token'] = new_token_info['access_token']
         session['expires_at'] = datetime.now().timestamp() + new_token_info['expires_in']
 
-        # return redirect('/playlists')
         return redirect('/top-artists')
 
 if __name__ == '__main__':
